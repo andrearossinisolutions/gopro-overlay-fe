@@ -48,6 +48,12 @@ jobs:
         working-directory: ${{ env.APP_DIR }}
         run: npm run build
 
+      - name: Inspect runner user
+        run: |
+          whoami
+          id
+          sudo -l
+
       - name: Restart frontend service
         run: |
           sudo systemctl restart "$SERVICE_NAME"
