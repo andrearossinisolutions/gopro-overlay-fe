@@ -1,0 +1,54 @@
+name: Deploy frontend
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: gopro-overlay-frontend-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, x64]
+
+    env:
+      APP_DIR: /home/arossini/apps/gopro-overlay/frontend
+      SERVICE_NAME: gopro-overlay-frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Sync frontend files to deploy directory
+        run: |
+          mkdir -p "$APP_DIR"
+          rsync -av --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "node_modules" \
+            --exclude ".next" \
+            "$GITHUB_WORKSPACE/" \
+            "$APP_DIR/"
+
+      - name: Verify Node
+        run: |
+          which node
+          node --version
+          which npm
+          npm --version
+
+      - name: Install dependencies
+        working-directory: ${{ env.APP_DIR }}
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ${{ env.APP_DIR }}
+        run: npm run build
+
+      - name: Restart frontend service
+        run: |
+          sudo systemctl restart "$SERVICE_NAME"
+          sudo systemctl status "$SERVICE_NAME" --no-pager
