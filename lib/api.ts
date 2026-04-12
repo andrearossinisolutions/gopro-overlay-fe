@@ -115,16 +115,48 @@ export async function getPreview(jobId: string, t: number): Promise<PreviewPaylo
   return parseJson<PreviewPayload>(await fetch(`${API_BASE_URL}/jobs/${jobId}/preview?t=${encodeURIComponent(String(t))}`, { cache: 'no-store' }));
 }
 
-export async function uploadVideo(file: File): Promise<{ jobId: string; status: string; fileUrl: string }> {
-  const formData = new FormData();
-  formData.append('file', file);
+export function uploadVideoWithProgress(
+  file: File,
+  onProgress: (percent: number) => void
+): Promise<{ jobId: string; status: string; fileUrl: string }> {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append('file', file);
 
-  const response = await fetch(`${API_BASE_URL}/uploads`, {
-    method: 'POST',
-    body: formData,
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${API_BASE_URL}/uploads`);
+
+    xhr.upload.onprogress = (event) => {
+      if (!event.lengthComputable) return;
+      const percent = Math.round((event.loaded / event.total) * 100);
+      onProgress(percent);
+    };
+
+    xhr.onload = () => {
+      const responseText = xhr.responseText || '';
+
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          resolve(JSON.parse(responseText));
+        } catch {
+          reject(new Error('Risposta non valida dal server.'));
+        }
+        return;
+      }
+
+      reject(new Error(responseText || `HTTP ${xhr.status}`));
+    };
+
+    xhr.onerror = () => {
+      reject(new Error('Errore di rete durante l’upload.'));
+    };
+
+    xhr.onabort = () => {
+      reject(new Error('Upload annullato.'));
+    };
+
+    xhr.send(formData);
   });
-
-  return parseJson<{ jobId: string; status: string; fileUrl: string }>(response);
 }
 
 export async function createRender(jobId: string, config: RenderConfig): Promise<RenderResponse> {
