@@ -171,7 +171,13 @@ export async function createRender(jobId: string, config: RenderConfig): Promise
 export function backendFileUrl(relativePath?: string | null): string | null {
   if (!relativePath) return null;
   if (relativePath.startsWith('http')) return relativePath;
-  return `${BACKEND_BASE_URL}/${relativePath.replace(/^\/+/, '')}`;
+
+  const normalized = relativePath.replace(/^\/+/, '');
+  const publicPath = normalized.startsWith('data/')
+    ? normalized.replace(/^data\//, 'files/')
+    : `files/${normalized}`;
+
+  return `${BACKEND_BASE_URL}/${publicPath}`;
 }
 
 export const defaultRenderConfig: RenderConfig = {
