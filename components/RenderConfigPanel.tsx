@@ -9,23 +9,32 @@ import {
   getJob,
   RenderConfig,
   RenderResponse,
+  JobStatus,
 } from '@/lib/api';
+
+type Props = {
+  jobId: string;
+  initialJobStatus?: JobStatus;
+  initialProgress?: number;
+  initialStep?: string;
+  existingRenderUrl?: string | null;
+};
 
 export function RenderConfigPanel({
   jobId,
+  initialJobStatus,
+  initialProgress = 0,
+  initialStep = '',
   existingRenderUrl,
-}: {
-  jobId: string;
-  existingRenderUrl?: string | null;
-}) {
+}: Props) {
   const router = useRouter();
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const [config, setConfig] = useState<RenderConfig>(defaultRenderConfig);
-  const [loading, setLoading] = useState(false);
-  const [isPolling, setIsPolling] = useState(false);
-  const [renderProgress, setRenderProgress] = useState(0);
-  const [renderStep, setRenderStep] = useState<string>('');
+  const [loading, setLoading] = useState(initialJobStatus === 'rendering');
+  const [isPolling, setIsPolling] = useState(initialJobStatus === 'rendering');
+  const [renderProgress, setRenderProgress] = useState(initialProgress);
+  const [renderStep, setRenderStep] = useState(initialStep || (initialJobStatus === 'rendering' ? 'Rendering in corso...' : ''));
   const [result, setResult] = useState<RenderResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -68,6 +77,12 @@ export function RenderConfigPanel({
         stopPolling();
         setLoading(false);
         setError(job.error_message || 'Render fallito.');
+        return;
+      }
+
+      if (job.status !== 'rendering') {
+        stopPolling();
+        setLoading(false);
       }
     } catch (err) {
       stopPolling();
@@ -95,17 +110,24 @@ export function RenderConfigPanel({
         void pollJobStatus();
       }, 1500);
     } catch (err) {
+      stopPolling();
       setLoading(false);
-      setIsPolling(false);
       setError(err instanceof Error ? err.message : 'Render fallito');
     }
   }
 
   useEffect(() => {
+    if (initialJobStatus === 'rendering' && !pollRef.current) {
+      void pollJobStatus();
+      pollRef.current = setInterval(() => {
+        void pollJobStatus();
+      }, 1500);
+    }
+
     return () => {
       stopPolling();
     };
-  }, []);
+  }, [initialJobStatus, jobId]);
 
   const finalUrl =
     result?.renderedVideoUrl
@@ -184,43 +206,23 @@ export function RenderConfigPanel({
 
       <div className="grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
         <label className="row small">
-          <input
-            type="checkbox"
-            checked={config.showSpeed}
-            onChange={(e) => setField('showSpeed', e.target.checked)}
-          />
+          <input type="checkbox" checked={config.showSpeed} onChange={(e) => setField('showSpeed', e.target.checked)} />
           Velocità
         </label>
         <label className="row small">
-          <input
-            type="checkbox"
-            checked={config.showAltitude}
-            onChange={(e) => setField('showAltitude', e.target.checked)}
-          />
+          <input type="checkbox" checked={config.showAltitude} onChange={(e) => setField('showAltitude', e.target.checked)} />
           Altitudine
         </label>
         <label className="row small">
-          <input
-            type="checkbox"
-            checked={config.showCoordinates}
-            onChange={(e) => setField('showCoordinates', e.target.checked)}
-          />
+          <input type="checkbox" checked={config.showCoordinates} onChange={(e) => setField('showCoordinates', e.target.checked)} />
           Coordinate
         </label>
         <label className="row small">
-          <input
-            type="checkbox"
-            checked={config.showMiniMap}
-            onChange={(e) => setField('showMiniMap', e.target.checked)}
-          />
+          <input type="checkbox" checked={config.showMiniMap} onChange={(e) => setField('showMiniMap', e.target.checked)} />
           Mini mappa
         </label>
         <label className="row small">
-          <input
-            type="checkbox"
-            checked={config.showTimestamp}
-            onChange={(e) => setField('showTimestamp', e.target.checked)}
-          />
+          <input type="checkbox" checked={config.showTimestamp} onChange={(e) => setField('showTimestamp', e.target.checked)} />
           Timestamp
         </label>
       </div>

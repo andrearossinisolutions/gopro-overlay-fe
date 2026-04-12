@@ -37,7 +37,13 @@ export default async function JobPage({ params }: { params: { id: string } }) {
         </div>
 
         <div className="stack">
-          <RenderConfigPanel jobId={job.id} existingRenderUrl={renderedVideoUrl} />
+          <RenderConfigPanel
+            jobId={job.id}
+            initialJobStatus={job.status}
+            initialProgress={job.progress}
+            initialStep={job.step}
+            existingRenderUrl={renderedVideoUrl}
+          />
           <div className="card stack">
             <h3>Stato attuale</h3>
             <div className="small muted">
