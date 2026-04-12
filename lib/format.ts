@@ -20,15 +20,15 @@ export function formatSeconds(seconds: number): string {
   return `${mins}:${String(secs).padStart(2, '0')}`;
 }
 
-export function formatSpeedKmh(speed: number, units: 'metric' | 'imperial'): string {
+export function formatSpeedKmh(speed: number, units: 'metric' | 'imperial' | 'hybrid'): string {
   if (!Number.isFinite(speed)) return '-';
   if (units === 'imperial') return `${(speed * 0.621371).toFixed(1)} mph`;
   return `${speed.toFixed(1)} km/h`;
 }
 
-export function formatAltitudeMeters(alt: number, units: 'metric' | 'imperial'): string {
+export function formatAltitudeMeters(alt: number, units: 'metric' | 'imperial' | 'hybrid'): string {
   if (!Number.isFinite(alt)) return '-';
-  if (units === 'imperial') return `${(alt * 3.28084).toFixed(0)} ft`;
+  if (units !== 'metric') return `${(alt * 3.28084).toFixed(0)} ft`;
   return `${alt.toFixed(0)} m`;
 }
 

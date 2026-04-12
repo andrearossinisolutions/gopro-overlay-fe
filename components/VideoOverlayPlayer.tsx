@@ -73,6 +73,7 @@ export function VideoOverlayPlayer({ job, telemetry }: { job: Job; telemetry: Te
           <select className="select" value={renderConfig.units} onChange={(e) => setRenderConfig((p) => ({ ...p, units: e.target.value as RenderConfig['units'] }))}>
             <option value="metric">metric</option>
             <option value="imperial">imperial</option>
+            <option value="hybrid">hybrid</option>
           </select>
         </label>
         <label className="row small"><input type="checkbox" checked={renderConfig.showCoordinates} onChange={(e) => setRenderConfig((p) => ({ ...p, showCoordinates: e.target.checked }))} /> Coordinate</label>
