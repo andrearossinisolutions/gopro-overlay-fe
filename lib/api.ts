@@ -37,7 +37,8 @@ export type RenderConfig = {
   theme: 'minimal-dark' | 'minimal-light';
   units: 'metric' | 'imperial' | 'hybrid';
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-  showSpeed: boolean;
+  showSpeed: boolean; // GS
+  showIAS: boolean;
   showAltitude: boolean;
   showCoordinates: boolean;
   showMiniMap: boolean;
@@ -54,6 +55,8 @@ export type TelemetrySample = {
   alt: number;
   speed_kmh: number;
   heading: number;
+  gs_kmh?: number;
+  ias_kmh?: number;
 };
 
 export type TelemetryPayload = {
@@ -186,6 +189,7 @@ export const defaultRenderConfig: RenderConfig = {
   units: 'hybrid',
   position: 'bottom-left',
   showSpeed: true,
+  showIAS: true,
   showAltitude: true,
   showCoordinates: false,
   showMiniMap: false,

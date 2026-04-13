@@ -77,28 +77,40 @@ export function VideoOverlayPlayer({ job, telemetry }: { job: Job; telemetry: Te
           </select>
         </label>
         <label className="row small">
-        <input
-          type="checkbox"
-          checked={renderConfig.showSpeed}
-          onChange={(e) => setRenderConfig((p) => ({ ...p, showSpeed: e.target.checked }))}
-        /> Velocità
-      </label>
+          <input
+            type="checkbox"
+            checked={renderConfig.showSpeed}
+            onChange={(e) =>
+              setRenderConfig((p) => ({ ...p, showSpeed: e.target.checked }))
+            }
+          /> GS
+        </label>
 
-      <label className="row small">
-        <input
-          type="checkbox"
-          checked={renderConfig.showAltitude}
-          onChange={(e) => setRenderConfig((p) => ({ ...p, showAltitude: e.target.checked }))}
-        /> Altitudine
-      </label>
+        <label className="row small">
+          <input
+            type="checkbox"
+            checked={renderConfig.showIAS}
+            onChange={(e) =>
+              setRenderConfig((p) => ({ ...p, showIAS: e.target.checked }))
+            }
+          /> IAS
+        </label>
 
-      <label className="row small">
-        <input
-          type="checkbox"
-          checked={renderConfig.showHeading}
-          onChange={(e) => setRenderConfig((p) => ({ ...p, showHeading: e.target.checked }))}
-        /> Heading
-      </label>
+        <label className="row small">
+          <input
+            type="checkbox"
+            checked={renderConfig.showAltitude}
+            onChange={(e) => setRenderConfig((p) => ({ ...p, showAltitude: e.target.checked }))}
+          /> Altitudine
+        </label>
+
+        <label className="row small">
+          <input
+            type="checkbox"
+            checked={renderConfig.showHeading}
+            onChange={(e) => setRenderConfig((p) => ({ ...p, showHeading: e.target.checked }))}
+          /> Heading
+        </label>
         <label className="row small"><input type="checkbox" checked={renderConfig.showCoordinates} onChange={(e) => setRenderConfig((p) => ({ ...p, showCoordinates: e.target.checked }))} /> Coordinate</label>
         <label className="row small"><input type="checkbox" checked={renderConfig.showMiniMap} onChange={(e) => setRenderConfig((p) => ({ ...p, showMiniMap: e.target.checked }))} /> Mini mappa</label>
         <label className="row small"><input type="checkbox" checked={renderConfig.showTimestamp} onChange={(e) => setRenderConfig((p) => ({ ...p, showTimestamp: e.target.checked }))} /> Timestamp</label>
@@ -124,15 +136,30 @@ export function VideoOverlayPlayer({ job, telemetry }: { job: Job; telemetry: Te
               <div className="overlay-grid">
                 {renderConfig.showSpeed && (
                   <div className="overlay-metric">
-                    <div className="label">Velocità</div>
-                    <div className="value">{formatSpeedKmh(sample.speed_kmh, renderConfig.units)}</div>
+                    <div className="label">GS</div>
+                    <div className="value">
+                      {formatSpeedKmh(sample.gs_kmh ?? sample.speed_kmh, renderConfig.units)}
+                    </div>
+                  </div>
+                )}
+
+                {renderConfig.showIAS && (
+                  <div className="overlay-metric">
+                    <div className="label">IAS</div>
+                    <div className="value">
+                      {sample.ias_kmh !== undefined
+                        ? formatSpeedKmh(sample.ias_kmh, renderConfig.units)
+                        : '--'}
+                    </div>
                   </div>
                 )}
 
                 {renderConfig.showAltitude && (
                   <div className="overlay-metric">
                     <div className="label">Altitudine</div>
-                    <div className="value">{formatAltitudeMeters(sample.alt, renderConfig.units)}</div>
+                    <div className="value">
+                      {formatAltitudeMeters(sample.alt, renderConfig.units)}
+                    </div>
                   </div>
                 )}
 

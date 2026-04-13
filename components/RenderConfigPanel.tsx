@@ -206,23 +206,56 @@ export function RenderConfigPanel({
 
       <div className="grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
         <label className="row small">
-          <input type="checkbox" checked={config.showSpeed} onChange={(e) => setField('showSpeed', e.target.checked)} />
-          Velocità
+          <input
+            type="checkbox"
+            checked={config.showSpeed}
+            onChange={(e) => setField('showSpeed', e.target.checked)}
+          />
+          GS
         </label>
+
         <label className="row small">
-          <input type="checkbox" checked={config.showAltitude} onChange={(e) => setField('showAltitude', e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={config.showIAS}
+            onChange={(e) => setField('showIAS', e.target.checked)}
+          />
+          IAS
+        </label>
+
+        <label className="row small">
+          <input
+            type="checkbox"
+            checked={config.showAltitude}
+            onChange={(e) => setField('showAltitude', e.target.checked)}
+          />
           Altitudine
         </label>
+
         <label className="row small">
-          <input type="checkbox" checked={config.showCoordinates} onChange={(e) => setField('showCoordinates', e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={config.showCoordinates}
+            onChange={(e) => setField('showCoordinates', e.target.checked)}
+          />
           Coordinate
         </label>
+
         <label className="row small">
-          <input type="checkbox" checked={config.showMiniMap} onChange={(e) => setField('showMiniMap', e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={config.showMiniMap}
+            onChange={(e) => setField('showMiniMap', e.target.checked)}
+          />
           Mini mappa
         </label>
+
         <label className="row small">
-          <input type="checkbox" checked={config.showTimestamp} onChange={(e) => setField('showTimestamp', e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={config.showTimestamp}
+            onChange={(e) => setField('showTimestamp', e.target.checked)}
+          />
           Timestamp
         </label>
       </div>
