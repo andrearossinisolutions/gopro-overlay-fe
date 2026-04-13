@@ -35,13 +35,14 @@ export type Job = {
 
 export type RenderConfig = {
   theme: 'minimal-dark' | 'minimal-light';
-  units: 'metric' | 'imperial';
+  units: 'metric' | 'imperial' | 'hybrid';
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   showSpeed: boolean;
   showAltitude: boolean;
   showCoordinates: boolean;
   showMiniMap: boolean;
   showTimestamp: boolean;
+  showHeading: boolean;
   fontScale: number;
   margin: number;
 };
@@ -182,13 +183,14 @@ export function backendFileUrl(relativePath?: string | null): string | null {
 
 export const defaultRenderConfig: RenderConfig = {
   theme: 'minimal-dark',
-  units: 'metric',
+  units: 'hybrid',
   position: 'bottom-left',
   showSpeed: true,
   showAltitude: true,
   showCoordinates: false,
-  showMiniMap: true,
+  showMiniMap: false,
   showTimestamp: true,
+  showHeading: true,
   fontScale: 1,
   margin: 24,
 };

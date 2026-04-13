@@ -76,6 +76,29 @@ export function VideoOverlayPlayer({ job, telemetry }: { job: Job; telemetry: Te
             <option value="hybrid">hybrid</option>
           </select>
         </label>
+        <label className="row small">
+        <input
+          type="checkbox"
+          checked={renderConfig.showSpeed}
+          onChange={(e) => setRenderConfig((p) => ({ ...p, showSpeed: e.target.checked }))}
+        /> Velocità
+      </label>
+
+      <label className="row small">
+        <input
+          type="checkbox"
+          checked={renderConfig.showAltitude}
+          onChange={(e) => setRenderConfig((p) => ({ ...p, showAltitude: e.target.checked }))}
+        /> Altitudine
+      </label>
+
+      <label className="row small">
+        <input
+          type="checkbox"
+          checked={renderConfig.showHeading}
+          onChange={(e) => setRenderConfig((p) => ({ ...p, showHeading: e.target.checked }))}
+        /> Heading
+      </label>
         <label className="row small"><input type="checkbox" checked={renderConfig.showCoordinates} onChange={(e) => setRenderConfig((p) => ({ ...p, showCoordinates: e.target.checked }))} /> Coordinate</label>
         <label className="row small"><input type="checkbox" checked={renderConfig.showMiniMap} onChange={(e) => setRenderConfig((p) => ({ ...p, showMiniMap: e.target.checked }))} /> Mini mappa</label>
         <label className="row small"><input type="checkbox" checked={renderConfig.showTimestamp} onChange={(e) => setRenderConfig((p) => ({ ...p, showTimestamp: e.target.checked }))} /> Timestamp</label>
@@ -99,18 +122,33 @@ export function VideoOverlayPlayer({ job, telemetry }: { job: Job; telemetry: Te
             <div className={`overlay-box ${renderConfig.position}`} style={{ transform: `scale(${renderConfig.fontScale})`, transformOrigin: renderConfig.position.includes('right') ? 'bottom right' : 'bottom left' }}>
               <div className="overlay-title">Telemetry preview</div>
               <div className="overlay-grid">
-                <div className="overlay-metric">
-                  <div className="label">Velocità</div>
-                  <div className="value">{formatSpeedKmh(sample.speed_kmh, renderConfig.units)}</div>
-                </div>
-                <div className="overlay-metric">
-                  <div className="label">Altitudine</div>
-                  <div className="value">{formatAltitudeMeters(sample.alt, renderConfig.units)}</div>
-                </div>
+                {renderConfig.showSpeed && (
+                  <div className="overlay-metric">
+                    <div className="label">Velocità</div>
+                    <div className="value">{formatSpeedKmh(sample.speed_kmh, renderConfig.units)}</div>
+                  </div>
+                )}
+
+                {renderConfig.showAltitude && (
+                  <div className="overlay-metric">
+                    <div className="label">Altitudine</div>
+                    <div className="value">{formatAltitudeMeters(sample.alt, renderConfig.units)}</div>
+                  </div>
+                )}
+
+                {renderConfig.showHeading && (
+                  <div className="overlay-metric">
+                    <div className="label">Heading</div>
+                    <div className="value">{sample.heading.toFixed(0)}°</div>
+                  </div>
+                )}
               </div>
-              <div className="overlay-meta">Tempo video: {formatSeconds(currentTime)}</div>
+              {renderConfig.showTimestamp && (
+                <div className="overlay-meta">
+                  Tempo video: {formatSeconds(currentTime)}
+                </div>
+              )}
               {renderConfig.showCoordinates ? <div className="overlay-meta">GPS: {formatCoordinates(sample.lat, sample.lon)}</div> : null}
-              {renderConfig.showTimestamp ? <div className="overlay-meta">Campione t={sample.t.toFixed(2)}s · heading {sample.heading.toFixed(0)}°</div> : null}
               {renderConfig.showMiniMap ? <div className="overlay-meta">Mini mappa: placeholder frontend pronto per componente Leaflet/Canvas.</div> : null}
             </div>
           </div>
