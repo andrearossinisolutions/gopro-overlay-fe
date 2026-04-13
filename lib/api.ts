@@ -193,7 +193,7 @@ export const defaultRenderConfig: RenderConfig = {
   showAltitude: true,
   showCoordinates: false,
   showMiniMap: false,
-  showTimestamp: true,
+  showTimestamp: false,
   showHeading: true,
   fontScale: 1,
   margin: 24,
