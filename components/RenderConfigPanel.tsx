@@ -166,6 +166,7 @@ export function RenderConfigPanel({
         >
           <option value="metric">metric</option>
           <option value="imperial">imperial</option>
+          <option value="hybrid">hybrid</option>
         </select>
       </label>
 
