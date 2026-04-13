@@ -236,6 +236,15 @@ export function RenderConfigPanel({
         <label className="row small">
           <input
             type="checkbox"
+            checked={config.showHeading}
+            onChange={(e) => setField('showHeading', e.target.checked)}
+          />
+          Heading
+        </label>
+
+        <label className="row small">
+          <input
+            type="checkbox"
             checked={config.showCoordinates}
             onChange={(e) => setField('showCoordinates', e.target.checked)}
           />
